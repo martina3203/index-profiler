@@ -46,10 +46,10 @@ if debug == True:
 outputfile = args.OutputFile
 host=args.host
 port=args.port
-username=args.u
-password=args.p
+username=args.username
+password=args.password
 append=args.append
-SSL = args.S
+SSL = args.SSL
 context = ssl._create_unverified_context()
 debug = args.d
 horizontal = args.horizontal
@@ -81,6 +81,7 @@ def NWRequestURL(host,port,username,password,URLEndString):
 	except urllib2.URLError as e:
 		print("Failed to connect to server:", e.reason)
 		print("If you are getting an SSL: UNKNOWN_PROTOCOL Error, your REST API port may not be using SSL like you think it is. Or vice versa.")
+		print("Try adding/removing the -S option.")
 		exit()
 	except socket.error as e:
 		print("Socket Error! Are we sure the service is up and we are connecting on the REST port?")
