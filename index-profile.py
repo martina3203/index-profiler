@@ -7,6 +7,7 @@ import ssl
 import xml.etree.ElementTree
 import decimal
 import argparse
+import socket
 from operator import itemgetter
 
 #If you want more logging, change the below from logging.INFO to logging.DEBUG
@@ -29,6 +30,7 @@ parser.add_argument("-append",help='This will skip printing header information a
 parser.add_argument("-d","-D", help='Debug Mode', default=False,action="store_true")
 
 args = parser.parse_args()
+debug = args.d
 
 if debug == True:
 	print(args.OutputFile)
@@ -72,15 +74,16 @@ def NWRequestURL(host,port,username,password,URLEndString):
 	except urllib2.HTTPError as e:
 		if (e.code == 401):
 			print ("401: Unauthorized. May want to check your username/password combination as well as your connection information.")
-			logging.error("401: Unauthorized. May want to check your username/password combination as well as your connection information.")
 			exit()
 		else:
 			print ("Failed! Error code: " + e.code)
-			logging.error("Failed! Error code: " + e.code)
 			exit()
 	except urllib2.URLError as e:
 		print("Failed to connect to server:", e.reason)
-		logging.error("Failed to connect to server:", e.reason)
+		print("If you are getting an SSL: UNKNOWN_PROTOCOL Error, your REST API port may not be using SSL like you think it is. Or vice versa.")
+		exit()
+	except socket.error as e:
+		print("Socket Error! Are we sure the service is up and we are connecting on the REST port?")
 		exit()
 
 def ParseLanguageResponse(response):
