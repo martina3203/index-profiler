@@ -24,6 +24,8 @@ parser.add_argument('--port', help='Define the port that we will attempt to conn
 parser.add_argument("-S","-s","--SSL", help='Enable this if the REST Port is using SSL. (False by default)', default=False,action="store_true")
 parser.add_argument("-u","--username", help='Define the user that will connect on the Service API (admin by default)', default="admin")
 parser.add_argument("-p","--password", help='Define the password the user will use to connect to the Service API (netwitness by default)',default="netwitness")
+parser.add_argument("--horizontal",help='Horizontal Output with raw values. Vertical/Default output only puts percentages.', default=False,action="store_true")
+parser.add_argument("--append",help='This will skip printing header information and append to an existing file instead of overwriting. This is not compatible with horizontal mode.',\
 	default=False,action="store_true")
 parser.add_argument("-d","-D", help='Debug Mode', default=False,action="store_true")
 
