@@ -19,13 +19,11 @@ parser = argparse.ArgumentParser(description='Evaluate the status of the current
 	Note that if a key is seldomly used, this may not be from the current slice. This value is displayed as a percentage by default.\
 	The first number is the number of sessions currently in this index slice. Think of this as the bookmark for our results.')
 parser.add_argument("-f","--OutputFile", help='Designate an output filename that will be a CSV. (indexstatus.csv by default)',default="indexstatus.csv")
-parser.add_argument("-host",help='Define the host that we will check the index on. (localhost by default)', default="localhost")
-parser.add_argument('-port', help='Define the port that we will attempt to connect on the host. (50105 by default)', default="50105")
-parser.add_argument("-S","-s","-SSL", help='Enable this if the REST Port is using SSL. (False by default)', default=False,action="store_true")
-parser.add_argument("-u","-username", help='Define the user that will connect on the Service API (admin by default)', default="admin")
-parser.add_argument("-p","-password", help='Define the password the user will use to connect to the Service API (netwitness by default)',default="netwitness")
-parser.add_argument("-horizontal",help='Horizontal Output with raw values. Vertical/Default output only puts percentages.', default=False,action="store_true")
-parser.add_argument("-append",help='This will skip printing header information and append to an existing file instead of overwriting. This is not compatible with horizontal mode.',\
+parser.add_argument("--host",help='Define the host that we will check the index on. (localhost by default)', default="localhost")
+parser.add_argument('--port', help='Define the port that we will attempt to connect on the host. (50105 by default)', default="50105")
+parser.add_argument("-S","-s","--SSL", help='Enable this if the REST Port is using SSL. (False by default)', default=False,action="store_true")
+parser.add_argument("-u","--username", help='Define the user that will connect on the Service API (admin by default)', default="admin")
+parser.add_argument("-p","--password", help='Define the password the user will use to connect to the Service API (netwitness by default)',default="netwitness")
 	default=False,action="store_true")
 parser.add_argument("-d","-D", help='Debug Mode', default=False,action="store_true")
 
