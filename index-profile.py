@@ -8,6 +8,7 @@ import xml.etree.ElementTree
 import decimal
 import argparse
 import socket
+import os
 from operator import itemgetter
 
 #If you want more logging, change the below from logging.INFO to logging.DEBUG
@@ -25,7 +26,7 @@ parser.add_argument("-S","-s","--SSL", help='Enable this if the REST Port is usi
 parser.add_argument("-u","--username", help='Define the user that will connect on the Service API (admin by default)', default="admin")
 parser.add_argument("-p","--password", help='Define the password the user will use to connect to the Service API (netwitness by default)',default="netwitness")
 parser.add_argument("--horizontal",help='Horizontal Output with raw values. Vertical/Default output only puts percentages.', default=False,action="store_true")
-parser.add_argument("--append",help='This will skip printing header information and append to an existing file instead of overwriting. This is not compatible with horizontal mode.',\
+parser.add_argument("--addHeaders",help='When appending an existing file, add the headers before printing the next set of results again. This is not necessary if the file is brand new',\
 	default=False,action="store_true")
 parser.add_argument("-d","-D", help='Debug Mode', default=False,action="store_true")
 
@@ -36,10 +37,10 @@ if debug == True:
 	print(args.OutputFile)
 	print(args.host)
 	print(args.port)
-	print(args.S)
-	print(args.append)
-	print(args.u)
-	print(args.p)
+	print(args.SSL)
+	print(args.addHeaders)
+	print(args.username)
+	print(args.password)
 	print(args.d)
 
 #These are the default values.
@@ -48,7 +49,7 @@ host=args.host
 port=args.port
 username=args.username
 password=args.password
-append=args.append
+addHeaders=args.addHeaders
 SSL = args.SSL
 context = ssl._create_unverified_context()
 debug = args.d
@@ -133,14 +134,21 @@ def ParseIndexInspection(response):
 	return indexList
 
 def Output(language,inspection,sessionCount):
+	#If the file is empty, we will create a file with headers included.
+	#If not, we will append only values to the end of the file.
+	#User can specify if headers always get added no matter what.
+	global addHeaders
 	try:
-		if (append == True):
-			file = open(outputfile,'a')
-		else:
+		if (os.stat(outputfile).st_size == 0):
 			file = open(outputfile,'w')
+		else:
+			file = open(outputfile,'a')
 	except IOError:
 		print("ERROR: Unable to access file. Is it currently open or owned by a different user?")
 		return
+	except OSError:
+		addHeaders = True
+		file = open(outputfile,'w')
 	#Let's create a dictionary for easy search
 	sessionCountDict = { }
 	decimal.getcontext().rounding = decimal.ROUND_DOWN
@@ -179,7 +187,8 @@ def Output(language,inspection,sessionCount):
 	else:
 		#Create top row with names
 		length = len(language)
-		if (append == False):	
+		#Add headers if new file or they want them
+		if (addHeaders == True):	
 			printString = "SESSION NUMBER,"
 			counter = 0
 			for item in language:
