@@ -142,7 +142,10 @@ def Output(language,inspection,sessionCount):
 		if (os.stat(outputfile).st_size == 0):
 			file = open(outputfile,'w')
 		else:
-			file = open(outputfile,'a')
+			if horizontal == True:
+				file = open(outputfile,'w')
+			else:
+				file = open(outputfile,'a')
 	except IOError:
 		print("ERROR: Unable to access file. Is it currently open or owned by a different user?")
 		return
