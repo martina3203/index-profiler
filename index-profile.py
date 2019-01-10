@@ -66,7 +66,7 @@ def NWRequestURL(host,port,username,password,URLEndString):
 		URLFullString = "https://" + host + ":" + port + URLEndString
 
 	request = urllib2.Request(URLFullString)
-	request.add_header("Authorization", "Basic %s" % base64password)   
+	request.add_header("Authorization", "Basic %s" % base64password)
 	try:
 		#logging.debug("Trying URL: " + URLFullString)
 		result = urllib2.urlopen(request, context=context)
@@ -155,6 +155,7 @@ def Output(language,inspection,sessionCount):
 	#Let's create a dictionary for easy search
 	sessionCountDict = { }
 	decimal.getcontext().rounding = decimal.ROUND_DOWN
+	decimal.getcontext().prec = 2
 	for item in inspection:
 		keyName = item[0]
 		countForKey = item[1]
@@ -174,7 +175,7 @@ def Output(language,inspection,sessionCount):
 				#Divde by value count / valueMax to get percent used of the last slice it exists in.
 				try:
 					percentUsed = float(float(sessionCountDict[item[0]])/float(item[4])*100.0)
-					percentUsed = round(percentUsed,1)
+					percentUsed = decimal(percentUsed)
 				except ZeroDivisionError:
 					percentUsed = 0.0
 				#Truncate to 2 decimal places
@@ -186,12 +187,12 @@ def Output(language,inspection,sessionCount):
 				printString = item[0] + ",0," + item[4] + "," + str(percentUsed) + "%"
 				print (printString)
 				file.write(printString + "\n")
-
+    #Vertical Printing
 	else:
 		#Create top row with names
 		length = len(language)
 		#Add headers if new file or they want them
-		if (addHeaders == True):	
+		if (addHeaders == True):
 			printString = "SESSION NUMBER,"
 			counter = 0
 			for item in language:
@@ -214,7 +215,7 @@ def Output(language,inspection,sessionCount):
 					percentUsed = 0.0
 			else:
 				percentUsed = 0.0
-			
+
 			printString = printString + str(percentUsed) + "%"
 			if (counter < length-1):
 				printString = printString + ","
@@ -250,4 +251,3 @@ if debug == True:
 
 #Write to file
 Output(language,inspection,sessionCount)
-	
